@@ -232,6 +232,24 @@ public class IntArrayList implements Parcelable {
 
         return true;
     }
+    
+    @Override
+    public String toString() {
+        final int size = mSize;
+        final int[] items = mItems;
+        
+        final StringBuilder sb = new StringBuilder();
+        sb.append("IntArrayList [ ");
+        for (int i = 0; i < size; i++) {
+            sb.append(items[i]);
+            if (i < size - 1) {
+                sb.append(", ");
+            } else {
+                sb.append(" ]");
+            }
+        }
+        return sb.toString();
+    }
 
     @Override
     public int describeContents() {
