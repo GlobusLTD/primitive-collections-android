@@ -22,6 +22,10 @@ cache:
   directories:
     - $HOME/.gradle/
     - $HOME/.android/build-cache
+    
+branches:
+  only:
+  - master
 
 script:
   - ./gradlew clean check
