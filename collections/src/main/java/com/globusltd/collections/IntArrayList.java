@@ -61,16 +61,58 @@ public class IntArrayList implements Parcelable {
      * @return always true
      */
     public boolean add(final int item) {
-        int[] a = mItems;
+        final int[] a = mItems;
         final int s = mSize;
-        if (s == a.length) {
-            int[] newArray = new int[newCapacity(s)];
-            System.arraycopy(a, 0, newArray, 0, s);
-            mItems = a = newArray;
-        }
+        ensureCapacity(s + 1);
         a[s] = item;
         mSize = s + 1;
         return true;
+    }
+
+    /**
+     * Inserts the specified element at the specified position in this list
+     * (optional operation).  Shifts the element currently at that position
+     * (if any) and any subsequent elements to the right (adds one to their
+     * indices).
+     *
+     * @param index   index at which the specified element is to be inserted
+     * @param element element to be inserted
+     * @throws IndexOutOfBoundsException if the index is out of range
+     *                                   (<tt>index &lt; 0 || index &gt; size()</tt>)
+     */
+    public void add(final int index, final int element) {
+        final int[] a = mItems;
+        final int s = mSize;
+        if (index < 0 || index >= s) {
+            throwIndexOutOfBoundsException(index, s);
+        }
+
+        ensureCapacity(s + 1);
+        System.arraycopy(a, index, a, index + 1, s - index);
+        a[index] = element;
+        mSize = s + 1;
+    }
+
+    /**
+     * Replaces the element at the specified position in this list with the
+     * specified element (optional operation).
+     *
+     * @param index   index of the element to replace
+     * @param element element to be stored at the specified position
+     * @return the element previously at the specified position
+     * @throws IndexOutOfBoundsException if the index is out of range
+     *                                   (<tt>index &lt; 0 || index &gt;= size()</tt>)
+     */
+    public int set(final int index, final int element) {
+        final int size = mSize;
+        if (index < 0 || index >= size) {
+            throwIndexOutOfBoundsException(index, size);
+        }
+
+        final int[] a = mItems;
+        final int oldValue = a[index];
+        a[index] = element;
+        return oldValue;
     }
 
     /**
@@ -82,7 +124,7 @@ public class IntArrayList implements Parcelable {
      */
     public int get(final int index) {
         final int size = mSize;
-        if (index >= size) {
+        if (index < 0 || index >= size) {
             throwIndexOutOfBoundsException(index, size);
         }
         return mItems[index];
@@ -91,14 +133,14 @@ public class IntArrayList implements Parcelable {
     /**
      * Removes the element at the specified location from this list.
      *
-     * @param index the index of the object to remove.
+     * @param index the index of the object to removeAt.
      * @return the removed element.
      * @throws IndexOutOfBoundsException when {@code location < 0 || location >= size()}
      */
-    public int remove(final int index) {
+    public int removeAt(final int index) {
         final int[] a = mItems;
         int s = mSize;
-        if (index >= s) {
+        if (index < 0 || index >= s) {
             throwIndexOutOfBoundsException(index, s);
         }
 
@@ -117,18 +159,7 @@ public class IntArrayList implements Parcelable {
      * {@code IntArrayList}, {@code false} otherwise
      */
     public boolean contains(final int item) {
-        final int s = mSize;
-        int[] a = mItems;
-
-        boolean contains = false;
-        for (int i = 0; i < s; i++) {
-            if (a[i] == item) {
-                contains = true;
-                break;
-            }
-        }
-
-        return contains;
+        return indexOf(item) >= 0;
     }
 
     /**
@@ -166,7 +197,7 @@ public class IntArrayList implements Parcelable {
      * Searches this list for the specified number and returns the index of the
      * first occurrence.
      *
-     * @param item) the number to search for.
+     * @param item the number to search for.
      * @return the index of the first occurrence of the number, or -1 if it was
      * not found.
      */
@@ -194,6 +225,12 @@ public class IntArrayList implements Parcelable {
         return result;
     }
 
+    /**
+     * Returns the hash code value for this IntArrayList. Two lists are defined to have
+     * the same hashcode if they contain the same elements in the same order.
+     *
+     * @return the hash code value for this IntArrayList.
+     */
     @Override
     public int hashCode() {
         final int[] a = mItems;
@@ -205,6 +242,18 @@ public class IntArrayList implements Parcelable {
         return hashCode;
     }
 
+    /**
+     * Compares the specified object with this list for equality. Returns
+     * <tt>true</tt> if and only if the specified object is also a IntArrayList, both
+     * lists have the same size, and all corresponding pairs of elements in
+     * the two lists are <i>equal</i>.  (Two elements <tt>e1</tt> and
+     * <tt>e2</tt> are <i>equal</i> if <tt>(e1==null ? e2==null :
+     * e1.equals(e2))</tt>.) In other words, two lists are defined to be
+     * equal if they contain the same elements in the same order.
+     *
+     * @param o the object to be compared for equality with this list
+     * @return <tt>true</tt> if the specified object is equal to this IntArrayList
+     */
     @Override
     public boolean equals(final Object o) {
         if (o == this) {
@@ -232,12 +281,12 @@ public class IntArrayList implements Parcelable {
 
         return true;
     }
-    
+
     @Override
     public String toString() {
         final int size = mSize;
         final int[] items = mItems;
-        
+
         final StringBuilder sb = new StringBuilder();
         sb.append("IntArrayList [ ");
         for (int i = 0; i < size; i++) {
@@ -261,6 +310,16 @@ public class IntArrayList implements Parcelable {
         dest.writeInt(mSize);
         dest.writeInt(mItems.length);
         dest.writeIntArray(mItems);
+    }
+
+    private void ensureCapacity(final int minCapacity) {
+        final int[] a = mItems;
+        final int s = mSize;
+        if (minCapacity > a.length - 1) {
+            final int[] newArray = new int[newCapacity(minCapacity)];
+            System.arraycopy(a, 0, newArray, 0, s);
+            mItems = newArray;
+        }
     }
 
     private static void throwIndexOutOfBoundsException(final int index, final int size) {

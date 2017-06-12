@@ -25,6 +25,8 @@ Creating an instance and adding elements:
 IntArrayList numbers = new IntArrayList();
 numbers.add(100);
 numbers.add(200); // Now 'numbers' contains 2 elements - 100 and 200
+numbers.add(1, 300); // Now 'numbers' contains 3 elements - 100, 300 and 200
+numbers.set(2, 400); // Now 'numbers' contains 3 elements - 100, 300 and 400
 ```
 
 Copying elements from another instance:
@@ -49,7 +51,7 @@ boolean contains = numbers.contains(100);
 
 Removing the elements:
 ```java
-int removedElement = numbers.remove(1); // returns the removed element at index = 1
+int removedElement = numbers.removeAt(1); // returns the removed element at index = 1
 ...
 numbers.clear(); // removes all elements from 'numbers', leaving it empty.
 ```

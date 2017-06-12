@@ -46,6 +46,47 @@ public class LongArrayListTest {
         
         assertThat(longArrayList.size(), is(3));
     }
+
+    @Test
+    public void testAddItemAt1() throws Exception {
+        final LongArrayList longArrayList = new LongArrayList();
+        longArrayList.add(100);
+        longArrayList.add(200);
+
+        longArrayList.add(1, 300);
+
+        assertThat(longArrayList.size(), is(3));
+    }
+
+    @Test
+    public void testAddItemAt2() throws Exception {
+        final LongArrayList longArrayList = new LongArrayList();
+        longArrayList.add(100);
+        longArrayList.add(200);
+
+        longArrayList.add(1, 300);
+
+        assertThat(longArrayList.get(2), is(200L));
+    }
+
+    @Test
+    public void testSetItem1() throws Exception {
+        final LongArrayList longArrayList = new LongArrayList();
+        longArrayList.add(100);
+        longArrayList.add(200);
+
+        assertThat(longArrayList.set(0, 300), is(100L));
+    }
+
+    @Test
+    public void testSetItem2() throws Exception {
+        final LongArrayList longArrayList = new LongArrayList();
+        longArrayList.add(100);
+        longArrayList.add(200);
+        longArrayList.set(0, 300);
+
+        assertThat(longArrayList.get(0), is(300L));
+    }
     
     @Test
     public void testGetItem() throws Exception {
@@ -70,7 +111,7 @@ public class LongArrayListTest {
         longArrayList.add(200);
         longArrayList.add(300);
         
-        assertThat(longArrayList.remove(1), is(200L));
+        assertThat(longArrayList.removeAt(1), is(200L));
     }
     
     @Test
@@ -90,7 +131,7 @@ public class LongArrayListTest {
         longArrayList.add(100);
         longArrayList.add(200);
         longArrayList.add(300);
-        longArrayList.remove(1);
+        longArrayList.removeAt(1);
         
         final long[] array = longArrayList.toArray();
         assertArrayEquals(new long[] { 100, 300 }, array);
@@ -239,7 +280,7 @@ public class LongArrayListTest {
         
         final LongArrayList longArrayList2 = new LongArrayList(longArrayList1);
         
-        longArrayList1.remove(1);
+        longArrayList1.removeAt(1);
         
         assertNotEquals(longArrayList1, longArrayList2);
     }

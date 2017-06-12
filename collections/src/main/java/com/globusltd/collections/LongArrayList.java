@@ -61,16 +61,58 @@ public class LongArrayList implements Parcelable {
      * @return always true
      */
     public boolean add(final long item) {
-        long[] a = mItems;
+        final long[] a = mItems;
         final int s = mSize;
-        if (s == a.length) {
-            long[] newArray = new long[newCapacity(s)];
-            System.arraycopy(a, 0, newArray, 0, s);
-            mItems = a = newArray;
-        }
+        ensureCapacity(s + 1);
         a[s] = item;
         mSize = s + 1;
         return true;
+    }
+
+    /**
+     * Inserts the specified element at the specified position in this list
+     * (optional operation).  Shifts the element currently at that position
+     * (if any) and any subsequent elements to the right (adds one to their
+     * indices).
+     *
+     * @param index   index at which the specified element is to be inserted
+     * @param element element to be inserted
+     * @throws IndexOutOfBoundsException if the index is out of range
+     *                                   (<tt>index &lt; 0 || index &gt; size()</tt>)
+     */
+    public void add(final int index, final long element) {
+        final long[] a = mItems;
+        final int s = mSize;
+        if (index < 0 || index >= s) {
+            throwIndexOutOfBoundsException(index, s);
+        }
+
+        ensureCapacity(s + 1);
+        System.arraycopy(a, index, a, index + 1, s - index);
+        a[index] = element;
+        mSize = s + 1;
+    }
+
+    /**
+     * Replaces the element at the specified position in this list with the
+     * specified element (optional operation).
+     *
+     * @param index   index of the element to replace
+     * @param element element to be stored at the specified position
+     * @return the element previously at the specified position
+     * @throws IndexOutOfBoundsException if the index is out of range
+     *                                   (<tt>index &lt; 0 || index &gt;= size()</tt>)
+     */
+    public long set(final int index, final long element) {
+        final int size = mSize;
+        if (index < 0 || index >= size) {
+            throwIndexOutOfBoundsException(index, size);
+        }
+
+        final long[] a = mItems;
+        final long oldValue = a[index];
+        a[index] = element;
+        return oldValue;
     }
 
     /**
@@ -82,7 +124,7 @@ public class LongArrayList implements Parcelable {
      */
     public long get(final int index) {
         final int size = mSize;
-        if (index >= size) {
+        if (index < 0 || index >= size) {
             throwIndexOutOfBoundsException(index, size);
         }
         return mItems[index];
@@ -91,14 +133,14 @@ public class LongArrayList implements Parcelable {
     /**
      * Removes the element at the specified location from this list.
      *
-     * @param index the index of the object to remove.
+     * @param index the index of the object to removeAt.
      * @return the removed element.
      * @throws IndexOutOfBoundsException when {@code location < 0 || location >= size()}
      */
-    public long remove(final int index) {
+    public long removeAt(final int index) {
         final long[] a = mItems;
         int s = mSize;
-        if (index >= s) {
+        if (index < 0 || index >= s) {
             throwIndexOutOfBoundsException(index, s);
         }
 
@@ -117,18 +159,7 @@ public class LongArrayList implements Parcelable {
      * {@code LongArrayList}, {@code false} otherwise
      */
     public boolean contains(final long item) {
-        final int s = mSize;
-        long[] a = mItems;
-
-        boolean contains = false;
-        for (int i = 0; i < s; i++) {
-            if (a[i] == item) {
-                contains = true;
-                break;
-            }
-        }
-
-        return contains;
+        return indexOf(item) >= 0;
     }
 
     /**
@@ -194,17 +225,36 @@ public class LongArrayList implements Parcelable {
         return result;
     }
 
+    /**
+     * Returns the hash code value for this LongArrayList. Two lists are defined to have
+     * the same hashcode if they contain the same elements in the same order.
+     *
+     * @return the hash code value for this LongArrayList.
+     */
     @Override
     public int hashCode() {
         final long[] a = mItems;
         int hashCode = 1;
         for (int i = 0, s = mSize; i < s; i++) {
             final long e = a[i];
-            hashCode = 31 * hashCode + (int) (e ^ (e >>> 32));
+            final int elementHash = (int) (e ^ (e >>> 32));
+            hashCode = 31 * hashCode + elementHash;
         }
         return hashCode;
     }
 
+    /**
+     * Compares the specified object with this list for equality. Returns
+     * <tt>true</tt> if and only if the specified object is also a LongArrayList, both
+     * lists have the same size, and all corresponding pairs of elements in
+     * the two lists are <i>equal</i>.  (Two elements <tt>e1</tt> and
+     * <tt>e2</tt> are <i>equal</i> if <tt>(e1==null ? e2==null :
+     * e1.equals(e2))</tt>.) In other words, two lists are defined to be
+     * equal if they contain the same elements in the same order.
+     *
+     * @param o the object to be compared for equality with this list
+     * @return <tt>true</tt> if the specified object is equal to this LongArrayList
+     */
     @Override
     public boolean equals(final Object o) {
         if (o == this) {
@@ -261,6 +311,16 @@ public class LongArrayList implements Parcelable {
         dest.writeInt(mSize);
         dest.writeInt(mItems.length);
         dest.writeLongArray(mItems);
+    }
+
+    private void ensureCapacity(final int minCapacity) {
+        final long[] a = mItems;
+        final int s = mSize;
+        if (minCapacity > a.length - 1) {
+            long[] newArray = new long[newCapacity(minCapacity)];
+            System.arraycopy(a, 0, newArray, 0, s);
+            mItems = newArray;
+        }
     }
 
     private static void throwIndexOutOfBoundsException(final int index, final int size) {
