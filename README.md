@@ -1,19 +1,19 @@
 # Primitive Collections
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.globus-ltd/collections/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.globus-ltd/collections)[![Build Status](https://travis-ci.org/globus-ltd/collections.svg?branch=master)](https://travis-ci.org/globus-ltd/collections)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.globus-ltd/collections/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.globus-ltd/collections)
 
 Primitive collections are intended to be more memory efficient than using an List&lt;Number&gt; to store primitive numbers, because it avoids auto-boxing.
 
 # Download
 Gradle:
 ```groovy
-compile 'com.globus-ltd:collections:1.0.0'
+compile 'com.globus-ltd:collections:{latest_release}'
 ```
 Maven:
 ```xml
 <dependency>
   <groupId>com.globus-ltd</groupId>
   <artifactId>collections</artifactId>
-  <version>1.0.0</version>
+  <version>{latest_release}</version>
 </dependency>
 ```
 
