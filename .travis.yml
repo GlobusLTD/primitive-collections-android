@@ -1,0 +1,30 @@
+language: android
+
+android:
+  components:
+  - tools
+  - platform-tools
+  - build-tools-26.0.0
+  - android-25
+  - extra-android-m2repository
+  - extra-android-support
+  
+jdk:
+  - oraclejdk8
+  
+sudo: false
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+  
+cache:
+  directories:
+    - $HOME/.gradle/
+    - $HOME/.android/build-cache
+
+script:
+  - ./gradlew clean check
+  
+notifications:
+  email: false
