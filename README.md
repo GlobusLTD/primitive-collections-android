@@ -1,5 +1,5 @@
 # Primitive Collections
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.globus-ltd/collections/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.globus-ltd/collections) [![Build Status](https://travis-ci.org/GlobusLTD/primitive-collections-android.svg?branch=master)](https://travis-ci.org/GlobusLTD/primitive-collections-android)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.globus-ltd/collections/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.globus-ltd/collections) [![Build Status](https://travis-ci.org/GlobusLTD/primitive-collections-android.svg?branch=master)](https://travis-ci.org/GlobusLTD/primitive-collections-android) [![codecov](https://codecov.io/gh/GlobusLTD/primitive-collections-android/branch/master/graph/badge.svg)](https://codecov.io/gh/GlobusLTD/primitive-collections-android)
 
 Primitive collections are intended to be more memory efficient than using an List&lt;Number&gt; to store primitive numbers, because it avoids auto-boxing.
 
